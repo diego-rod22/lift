@@ -673,8 +673,8 @@ function showPage(name) {
 // ═══════════════════════════════════════════
 function getTodaySplit() {
   const dow = new Date().getDay(); // 0=Sun
-  const map = { 1:'pull', 2:'legs', 3:'push', 4:'pull2', 5:'legs2' };
-  return map[dow] || null;
+  const map = { 1:'push', 2:'pull', 3:'legs' }; // Mon-Wed: Push, Pull, Legs
+  return map[dow] || null; // Thu-Sun: rest days
 }
 
 function renderHome() {
