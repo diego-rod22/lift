@@ -56,14 +56,14 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
   .nav-btn {
-    flex: 1; padding: 14px 0 10px;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    flex: 1; padding: 10px 0 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
     background: none; border: none; color: var(--text-muted);
-    font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase;
     font-family: 'DM Mono', monospace; cursor: pointer;
     transition: color 0.2s;
   }
-  .nav-btn svg { width: 22px; height: 22px; }
+  .nav-btn svg { width: 18px; height: 18px; }
   .nav-btn.active { color: var(--accent); }
 
   /* ── PAGES ── */
@@ -252,6 +252,16 @@
     background: var(--surface2); border-radius: 6px; padding: 10px 0;
   }
   .set-num.completed { background: var(--accent-dim); color: var(--accent); }
+  .weight-controls {
+    display: flex; gap: 4px; align-items: center;
+  }
+  .weight-btn {
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text-muted); border-radius: 6px; padding: 8px;
+    font-family: 'DM Mono', monospace; font-size: 11px; cursor: pointer;
+    flex: 0 0 32px; transition: all 0.2s;
+  }
+  .weight-btn:hover { border-color: var(--accent); color: var(--accent); }
   .set-input {
     background: var(--surface2); border: 1px solid var(--border);
     border-radius: 8px; padding: 10px; text-align: center;
@@ -470,11 +480,56 @@
   <div class="page-header">
     <div>
       <h1>PROGRESS</h1>
-      <div class="sub">Max weight per exercise</div>
+      <div class="sub">Weekly volume · Exercise PRs</div>
     </div>
   </div>
   <div class="progress-filter" id="progress-filter"></div>
   <div id="progress-charts"></div>
+</div>
+
+<!-- ══════════ PERSONAL RECORDS PAGE ══════════ -->
+<div class="page" id="page-records">
+  <div class="page-header">
+    <div>
+      <h1>RECORDS</h1>
+      <div class="sub" id="records-count">0 personal records</div>
+    </div>
+  </div>
+  <div class="history-list" id="records-list"></div>
+</div>
+
+<!-- ══════════ BODY WEIGHT PAGE ══════════ -->
+<div class="page" id="page-weight">
+  <div class="page-header">
+    <div>
+      <h1>WEIGHT</h1>
+      <div class="sub" id="weight-current">Log your body weight</div>
+    </div>
+  </div>
+  <div style="padding: 0 16px 24px;">
+    <div class="settings-row" style="flex-direction: column; align-items: flex-start; gap: 12px;">
+      <div style="width: 100%;">
+        <div class="label" style="margin-bottom: 8px;">Today's Weight (lbs)</div>
+        <div style="display: flex; gap: 8px;">
+          <input type="number" id="weight-input" inputmode="decimal" placeholder="Weight" style="
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 8px; padding: 12px; color: var(--text);
+            font-size: 16px; font-family: 'DM Mono', monospace;
+            flex: 1; -webkit-appearance: none;">
+          <button onclick="addWeightEntry()" style="
+            background: var(--accent); color: #000; border: none;
+            border-radius: 8px; padding: 12px 20px; font-family: 'Bebas Neue', sans-serif;
+            font-size: 14px; letter-spacing: 1px; cursor: pointer; white-space: nowrap;">
+            LOG WEIGHT
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="padding: 0 16px;">
+    <div class="section-title">HISTORY</div>
+    <div id="weight-history"></div>
+  </div>
 </div>
 
 <!-- ══════════ SETTINGS PAGE ══════════ -->
@@ -568,6 +623,14 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     Progress
   </button>
+  <button class="nav-btn" onclick="showPage('records')" id="nav-records">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="12 7 12 12"/></svg>
+    Records
+  </button>
+  <button class="nav-btn" onclick="showPage('weight')" id="nav-weight">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><path d="M5.64 5.64a8 8 0 1 1 11.31 0M9 2h6"/></svg>
+    Weight
+  </button>
   <button class="nav-btn" onclick="showPage('settings')" id="nav-settings">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
     Settings
@@ -586,13 +649,13 @@ const SPLIT = [
     day: 'Monday',
     muscles: 'Back · Biceps · Rear Delts',
     exercises: [
-      { id: 'assisted_pullup',    name: 'Assisted Pull-Ups',           target: 'Back',       sets: 3, repRange: '6' },
-      { id: 'one_arm_db_row',     name: 'One-Arm DB Row',              target: 'Back',       sets: 3, repRange: '8–10' },
-      { id: 'seated_cable_row',   name: 'Seated Cable Row',            target: 'Mid Back',   sets: 3, repRange: '10–12' },
-      { id: 'face_pulls',         name: 'Face Pulls',                  target: 'Rear Delts', sets: 3, repRange: '15' },
-      { id: 'db_hammer_curls',    name: 'DB Hammer Curls',             target: 'Biceps',     sets: 3, repRange: '10–12' },
-      { id: 'incline_db_curls',   name: 'Incline DB Curls',            target: 'Biceps',     sets: 2, repRange: '12–15' },
-      { id: 'cable_pulldown',     name: 'Straight-Arm Cable Pulldown', target: 'Lats',       sets: 2, repRange: '12–15' },
+      { id: 'assisted_pullup',    name: 'Assisted Pull-Ups',           target: 'Back',       sets: 3, repRange: '6', defaultWeight: null },
+      { id: 'one_arm_db_row',     name: 'One-Arm DB Row',              target: 'Back',       sets: 3, repRange: '8–10', defaultWeight: 42.5 },
+      { id: 'seated_cable_row',   name: 'Seated Cable Row',            target: 'Mid Back',   sets: 3, repRange: '10–12', defaultWeight: 110 },
+      { id: 'face_pulls',         name: 'Face Pulls',                  target: 'Rear Delts', sets: 3, repRange: '15', defaultWeight: null },
+      { id: 'db_hammer_curls',    name: 'DB Hammer Curls',             target: 'Biceps',     sets: 3, repRange: '10–12', defaultWeight: 20 },
+      { id: 'incline_db_curls',   name: 'Incline DB Curls',            target: 'Biceps',     sets: 2, repRange: '12–15', defaultWeight: 20 },
+      { id: 'cable_pulldown',     name: 'Straight-Arm Cable Pulldown', target: 'Lats',       sets: 2, repRange: '12–15', defaultWeight: null },
     ]
   },
   {
@@ -602,13 +665,13 @@ const SPLIT = [
     day: 'Tuesday',
     muscles: 'Quads · Hamstrings · Glutes · Calves',
     exercises: [
-      { id: 'db_rdl',           name: 'DB Romanian Deadlift',         target: 'Hamstrings', sets: 3, repRange: '8–10' },
-      { id: 'hack_squat',       name: 'Hack Squat or Leg Press',      target: 'Quads',       sets: 3, repRange: '8–10' },
-      { id: 'leg_extension',    name: 'Leg Extension',                target: 'Quads',       sets: 3, repRange: '12–15' },
-      { id: 'leg_curl',         name: 'Leg Curl',                     target: 'Hamstrings', sets: 3, repRange: '12–15' },
-      { id: 'bulgarian_split',  name: 'Bulgarian Split Squats',       target: 'Quads/Glutes', sets: 3, repRange: '10–12' },
-      { id: 'calf_raise',       name: 'Standing Calf Raises',         target: 'Calves',     sets: 4, repRange: '15' },
-      { id: 'belt_squat',       name: 'Belt Squats',                  target: 'Quads',       sets: 2, repRange: '12–15' },
+      { id: 'db_rdl',           name: 'DB Romanian Deadlift',         target: 'Hamstrings', sets: 3, repRange: '8–10', defaultWeight: 42.5 },
+      { id: 'hack_squat',       name: 'Hack Squat or Leg Press',      target: 'Quads',       sets: 3, repRange: '8–10', defaultWeight: 230 },
+      { id: 'leg_extension',    name: 'Leg Extension',                target: 'Quads',       sets: 3, repRange: '12–15', defaultWeight: 95 },
+      { id: 'leg_curl',         name: 'Leg Curl',                     target: 'Hamstrings', sets: 3, repRange: '12–15', defaultWeight: 90 },
+      { id: 'bulgarian_split',  name: 'Bulgarian Split Squats',       target: 'Quads/Glutes', sets: 3, repRange: '10–12', defaultWeight: null },
+      { id: 'calf_raise',       name: 'Standing Calf Raises',         target: 'Calves',     sets: 4, repRange: '15', defaultWeight: 80 },
+      { id: 'belt_squat',       name: 'Belt Squats',                  target: 'Quads',       sets: 2, repRange: '12–15', defaultWeight: 180 },
     ]
   },
   {
@@ -618,13 +681,13 @@ const SPLIT = [
     day: 'Wednesday',
     muscles: 'Chest · Shoulders · Triceps',
     exercises: [
-      { id: 'db_bench',         name: 'Dumbbell Bench Press',              target: 'Chest',     sets: 3, repRange: '6–8' },
-      { id: 'incline_db_press', name: 'Incline Dumbbell Press',            target: 'Upper Chest', sets: 3, repRange: '8–10' },
-      { id: 'seated_db_ohp',    name: 'Seated Dumbbell Shoulder Press',    target: 'Shoulders', sets: 3, repRange: '8–10' },
-      { id: 'dips',             name: 'Dips (Assisted or BW)',             target: 'Triceps',   sets: 2, repRange: 'Max Reps' },
-      { id: 'db_lateral_raise', name: 'DB Lateral Raises',                 target: 'Side Delts', sets: 3, repRange: '12–15' },
-      { id: 'overhead_tri_ext', name: 'Overhead Single Arm DB Tricep Ext', target: 'Triceps',  sets: 3, repRange: '10–12' },
-      { id: 'cable_lateral',    name: 'Single-Arm Cable Lateral Raise',    target: 'Side Delts', sets: 2, repRange: '15' },
+      { id: 'db_bench',         name: 'Dumbbell Bench Press',              target: 'Chest',     sets: 3, repRange: '6–8', defaultWeight: 60 },
+      { id: 'incline_db_press', name: 'Incline Dumbbell Press',            target: 'Upper Chest', sets: 3, repRange: '8–10', defaultWeight: 40 },
+      { id: 'seated_db_ohp',    name: 'Seated Dumbbell Shoulder Press',    target: 'Shoulders', sets: 3, repRange: '8–10', defaultWeight: 30 },
+      { id: 'dips',             name: 'Dips (Assisted or BW)',             target: 'Triceps',   sets: 2, repRange: 'Max Reps', defaultWeight: null },
+      { id: 'db_lateral_raise', name: 'DB Lateral Raises',                 target: 'Side Delts', sets: 3, repRange: '12–15', defaultWeight: 12.5 },
+      { id: 'overhead_tri_ext', name: 'Overhead Single Arm DB Tricep Ext', target: 'Triceps',  sets: 3, repRange: '10–12', defaultWeight: 20 },
+      { id: 'cable_lateral',    name: 'Single-Arm Cable Lateral Raise',    target: 'Side Delts', sets: 2, repRange: '15', defaultWeight: 20 },
     ]
   },
   {
@@ -634,13 +697,13 @@ const SPLIT = [
     day: 'Thursday',
     muscles: 'Back · Biceps · Rear Delts',
     exercises: [
-      { id: 'assisted_pullup_2',    name: 'Assisted Pull-Ups',           target: 'Back',       sets: 3, repRange: '6' },
-      { id: 'one_arm_db_row_2',     name: 'One-Arm DB Row',              target: 'Back',       sets: 3, repRange: '8–10' },
-      { id: 'seated_cable_row_2',   name: 'Seated Cable Row',            target: 'Mid Back',   sets: 3, repRange: '10–12' },
-      { id: 'face_pulls_2',         name: 'Face Pulls',                  target: 'Rear Delts', sets: 3, repRange: '15' },
-      { id: 'db_hammer_curls_2',    name: 'DB Hammer Curls',             target: 'Biceps',     sets: 3, repRange: '10–12' },
-      { id: 'incline_db_curls_2',   name: 'Incline DB Curls',            target: 'Biceps',     sets: 2, repRange: '12–15' },
-      { id: 'cable_pulldown_2',     name: 'Straight-Arm Cable Pulldown', target: 'Lats',       sets: 2, repRange: '12–15' },
+      { id: 'assisted_pullup_2',    name: 'Assisted Pull-Ups',           target: 'Back',       sets: 3, repRange: '6', defaultWeight: null },
+      { id: 'one_arm_db_row_2',     name: 'One-Arm DB Row',              target: 'Back',       sets: 3, repRange: '8–10', defaultWeight: 42.5 },
+      { id: 'seated_cable_row_2',   name: 'Seated Cable Row',            target: 'Mid Back',   sets: 3, repRange: '10–12', defaultWeight: 110 },
+      { id: 'face_pulls_2',         name: 'Face Pulls',                  target: 'Rear Delts', sets: 3, repRange: '15', defaultWeight: null },
+      { id: 'db_hammer_curls_2',    name: 'DB Hammer Curls',             target: 'Biceps',     sets: 3, repRange: '10–12', defaultWeight: 20 },
+      { id: 'incline_db_curls_2',   name: 'Incline DB Curls',            target: 'Biceps',     sets: 2, repRange: '12–15', defaultWeight: 20 },
+      { id: 'cable_pulldown_2',     name: 'Straight-Arm Cable Pulldown', target: 'Lats',       sets: 2, repRange: '12–15', defaultWeight: null },
     ]
   },
   {
@@ -650,13 +713,13 @@ const SPLIT = [
     day: 'Friday',
     muscles: 'Quads · Hamstrings · Glutes · Calves',
     exercises: [
-      { id: 'db_rdl_2',           name: 'DB Romanian Deadlift',         target: 'Hamstrings', sets: 3, repRange: '8–10' },
-      { id: 'hack_squat_2',       name: 'Hack Squat or Leg Press',      target: 'Quads',       sets: 3, repRange: '8–10' },
-      { id: 'leg_extension_2',    name: 'Leg Extension',                target: 'Quads',       sets: 3, repRange: '12–15' },
-      { id: 'leg_curl_2',         name: 'Leg Curl',                     target: 'Hamstrings', sets: 3, repRange: '12–15' },
-      { id: 'bulgarian_split_2',  name: 'Bulgarian Split Squats',       target: 'Quads/Glutes', sets: 3, repRange: '10–12' },
-      { id: 'calf_raise_2',       name: 'Standing Calf Raises',         target: 'Calves',     sets: 4, repRange: '15' },
-      { id: 'belt_squat_2',       name: 'Belt Squats',                  target: 'Quads',       sets: 2, repRange: '12–15' },
+      { id: 'db_rdl_2',           name: 'DB Romanian Deadlift',         target: 'Hamstrings', sets: 3, repRange: '8–10', defaultWeight: 42.5 },
+      { id: 'hack_squat_2',       name: 'Hack Squat or Leg Press',      target: 'Quads',       sets: 3, repRange: '8–10', defaultWeight: 230 },
+      { id: 'leg_extension_2',    name: 'Leg Extension',                target: 'Quads',       sets: 3, repRange: '12–15', defaultWeight: 95 },
+      { id: 'leg_curl_2',         name: 'Leg Curl',                     target: 'Hamstrings', sets: 3, repRange: '12–15', defaultWeight: 90 },
+      { id: 'bulgarian_split_2',  name: 'Bulgarian Split Squats',       target: 'Quads/Glutes', sets: 3, repRange: '10–12', defaultWeight: null },
+      { id: 'calf_raise_2',       name: 'Standing Calf Raises',         target: 'Calves',     sets: 4, repRange: '15', defaultWeight: 80 },
+      { id: 'belt_squat_2',       name: 'Belt Squats',                  target: 'Quads',       sets: 2, repRange: '12–15', defaultWeight: 180 },
     ]
   },
 ];
@@ -698,6 +761,8 @@ function showPage(name) {
   document.getElementById('nav-' + name).classList.add('active');
   if (name === 'history') renderHistory();
   if (name === 'progress') renderProgress();
+  if (name === 'records') renderRecords();
+  if (name === 'weight') renderWeight();
 }
 
 // ═══════════════════════════════════════════
@@ -776,6 +841,7 @@ let currentSession = null;
 let sessionTimer = null;
 let sessionStart = null;
 let setData = {}; // { exId: [ {weight, reps, done}, ... ] }
+let touchStart = {};
 
 function startSession() {
   const todayId = getTodaySplit();
@@ -788,11 +854,11 @@ function startSessionForSplit(splitId) {
   currentSession = split;
   setData = {};
 
-  // Pre-fill sets from program defaults
+  // Pre-fill sets with default weights
   split.exercises.forEach(ex => {
     setData[ex.id] = [];
     for (let i = 0; i < ex.sets; i++) {
-      setData[ex.id].push({ weight: '', reps: '', done: false });
+      setData[ex.id].push({ weight: ex.defaultWeight || '', reps: '', done: false });
     }
   });
 
@@ -866,31 +932,73 @@ function renderSetsForEx(ex) {
 
   sets.forEach((set, i) => {
     const lastSet = lastEx?.sets?.[i];
+    const placeholder = lastSet?.weight || ex.defaultWeight || 'lbs';
     const row = document.createElement('div');
     row.className = 'set-row';
     row.id = `setrow-${ex.id}-${i}`;
 
-    row.innerHTML = `
-      <div class="set-num ${set.done ? 'completed' : ''}" id="setnum-${ex.id}-${i}">${i+1}</div>
-      <input type="number" inputmode="decimal" class="set-input ${set.weight?'has-value':''}"
-        id="weight-${ex.id}-${i}" placeholder="${lastSet?.weight||'lbs'}"
-        value="${set.weight}" oninput="updateSet('${ex.id}',${i},'weight',this.value)">
-      <input type="number" inputmode="numeric" class="set-input ${set.reps?'has-value':''}"
-        id="reps-${ex.id}-${i}" placeholder="${lastSet?.reps||ex.repRange}"
-        value="${set.reps}" oninput="updateSet('${ex.id}',${i},'reps',this.value)">
+    const checkMarkup = `
       <div class="set-check ${set.done?'done':''}" id="check-${ex.id}-${i}"
-        onclick="toggleDone('${ex.id}',${i})">
+        onclick="toggleDone('${ex.id}',${i})"
+        ontouchstart="touchStartSetCheck(event,'${ex.id}',${i})"
+        ontouchend="touchEndSetCheck(event,'${ex.id}',${i})">
         ${set.done ? '✓' : ''}
       </div>
     `;
+
+    row.innerHTML = `
+      <div class="set-num ${set.done ? 'completed' : ''}" id="setnum-${ex.id}-${i}">${i+1}</div>
+      <div class="weight-controls">
+        <button class="weight-btn" onclick="adjWeight('${ex.id}',${i},-2.5)">−</button>
+        <input type="number" inputmode="decimal" class="set-input ${set.weight?'has-value':''}"
+          id="weight-${ex.id}-${i}" placeholder="${placeholder}"
+          value="${set.weight}" oninput="updateSet('${ex.id}',${i},'weight',this.value)">
+        <button class="weight-btn" onclick="adjWeight('${ex.id}',${i},2.5)">+</button>
+      </div>
+      <input type="number" inputmode="numeric" class="set-input ${set.reps?'has-value':''}"
+        id="reps-${ex.id}-${i}" placeholder="${lastSet?.reps||ex.repRange}"
+        value="${set.reps}" oninput="updateSet('${ex.id}',${i},'reps',this.value)">
+      ${checkMarkup}
+    `;
     container.appendChild(row);
   });
+}
+
+function adjWeight(exId, idx, delta) {
+  const input = document.getElementById(`weight-${exId}-${idx}`);
+  if (!input) return;
+  const current = parseFloat(input.value) || 0;
+  const newVal = Math.max(0, current + delta);
+  input.value = newVal;
+  updateSet(exId, idx, 'weight', newVal.toString());
 }
 
 function updateSet(exId, idx, field, val) {
   setData[exId][idx][field] = val;
   const input = document.getElementById(`${field==='weight'?'weight':'reps'}-${exId}-${idx}`);
   if (input) input.classList.toggle('has-value', !!val);
+}
+
+// ─────────────────────────────────────────
+// SWIPE DETECTION FOR FAST SET COMPLETION
+// ─────────────────────────────────────────
+function touchStartSetCheck(e, exId, idx) {
+  touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY, time: Date.now() };
+}
+
+function touchEndSetCheck(e, exId, idx) {
+  if (!touchStart.x) return;
+  const dx = e.changedTouches[0].clientX - touchStart.x;
+  const dy = e.changedTouches[0].clientY - touchStart.y;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+  const elapsed = Date.now() - touchStart.time;
+  
+  // Detect horizontal swipe (left or right) within 500ms
+  if (elapsed < 500 && dist > 30 && Math.abs(dx) > Math.abs(dy)) {
+    toggleDone(exId, idx);
+    touchStart = {};
+    e.preventDefault();
+  }
 }
 
 function toggleDone(exId, idx) {
@@ -1050,6 +1158,29 @@ function renderProgress() {
   }
 
   charts.innerHTML = '';
+  
+  // WEEKLY VOLUME CHART
+  const weekStart = new Date();
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+  const weekVolume = sessions
+    .filter(s => new Date(s.timestamp) >= weekStart)
+    .flatMap(s => s.exercises || [])
+    .flatMap(e => e.sets || [])
+    .filter(s => s.done && s.weight && s.reps)
+    .reduce((sum, s) => sum + (parseFloat(s.weight) || 0) * (parseFloat(s.reps) || 0), 0);
+  
+  const volumeCard = document.createElement('div');
+  volumeCard.className = 'progress-chart-card';
+  volumeCard.innerHTML = `
+    <div class="chart-title">THIS WEEK</div>
+    <div class="chart-exercise">Weekly Volume</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--accent);margin:20px 0;">
+      ${Math.round(weekVolume)}
+      <span style="font-size:18px;color:var(--text-muted);margin-left:8px;">total lbs</span>
+    </div>
+  `;
+  charts.appendChild(volumeCard);
+  
   const filtered = progressFilter === 'all' ? exWithData : exWithData.filter(e => e.split.type === progressFilter);
 
   filtered.forEach(({ ex, split, allSets }) => {
@@ -1152,6 +1283,138 @@ function drawSparkline(canvasId, data, type) {
 }
 
 // ═══════════════════════════════════════════
+// BODY WEIGHT TRACKING
+// ═══════════════════════════════════════════
+let weightEntries = [];
+
+function loadWeightData() {
+  try {
+    const d = localStorage.getItem('lift_weights');
+    if (d) weightEntries = JSON.parse(d);
+  } catch(e) { weightEntries = []; }
+}
+
+function saveWeightData() {
+  try { localStorage.setItem('lift_weights', JSON.stringify(weightEntries)); } catch(e){}
+}
+
+function addWeightEntry() {
+  const input = document.getElementById('weight-input');
+  const weight = parseFloat(input.value);
+  if (!weight || weight <= 0) { showToast('Enter a valid weight'); return; }
+  
+  weightEntries.push({
+    date: new Date().toISOString(),
+    weight: weight
+  });
+  saveWeightData();
+  input.value = '';
+  renderWeight();
+  showToast(`${weight} lbs logged`);
+}
+
+function deleteWeightEntry(idx) {
+  if (!confirm('Delete this entry?')) return;
+  weightEntries.splice(idx, 1);
+  saveWeightData();
+  renderWeight();
+}
+
+function renderWeight() {
+  loadWeightData();
+  const current = weightEntries.length ? weightEntries[weightEntries.length - 1].weight : 0;
+  const change = weightEntries.length > 1 ? current - weightEntries[0].weight : 0;
+  document.getElementById('weight-current').textContent = current ? `${current} lbs · ${change > 0 ? '+' : ''}${change.toFixed(1)} lbs` : 'Log your body weight';
+  
+  const historyEl = document.getElementById('weight-history');
+  if (!weightEntries.length) {
+    historyEl.innerHTML = '<div class="empty-state"><span class="big">NONE</span>No weight entries yet.</div>';
+    return;
+  }
+  
+  historyEl.innerHTML = '';
+  [...weightEntries].reverse().forEach((entry, idx) => {
+    const date = new Date(entry.date);
+    const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' });
+    const card = document.createElement('div');
+    card.className = 'history-entry';
+    card.innerHTML = `
+      <div class="history-entry-top">
+        <div>
+          <div class="history-date">${dateStr}</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--accent);">${entry.weight} <span style="font-size:14px;color:var(--text-muted);">lbs</span></div>
+        </div>
+        <button class="history-delete" onclick="deleteWeightEntry(${weightEntries.length - 1 - idx})">Delete</button>
+      </div>
+    `;
+    historyEl.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════
+// PERSONAL RECORDS
+// ═══════════════════════════════════════════
+function renderRecords() {
+  const list = document.getElementById('records-list');
+  const records = [];
+  
+  // Collect all exercise records
+  SPLIT.forEach(split => {
+    split.exercises.forEach(ex => {
+      const allSets = sessions.flatMap(s =>
+        s.exercises?.find(e => e.id === ex.id)?.sets?.filter(ss => ss.done && ss.weight && ss.reps) || []
+      );
+      if (allSets.length) {
+        const maxWeight = Math.max(...allSets.map(s => parseFloat(s.weight) || 0));
+        const maxRepsForWeight = allSets.find(s => parseFloat(s.weight) === maxWeight)?.reps;
+        const sessionWithRecord = sessions.find(s =>
+          s.exercises?.find(e => e.id === ex.id)?.sets?.some(ss =>
+            ss.done && parseFloat(ss.weight) === maxWeight && ss.reps === maxRepsForWeight
+          )
+        );
+        records.push({
+          exerciseName: ex.name,
+          exercise: ex,
+          split: split,
+          weight: maxWeight,
+          reps: maxRepsForWeight,
+          date: sessionWithRecord ? new Date(sessionWithRecord.timestamp) : new Date(),
+          target: ex.target
+        });
+      }
+    });
+  });
+  
+  records.sort((a, b) => b.weight - a.weight);
+  document.getElementById('records-count').textContent = `${records.length} personal record${records.length !== 1 ? 's' : ''}`;
+  
+  if (!records.length) {
+    list.innerHTML = '<div class="empty-state"><span class="big">NONE</span>Log workouts to see personal records.</div>';
+    return;
+  }
+  
+  list.innerHTML = '';
+  records.forEach(rec => {
+    const dateStr = rec.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const entry = document.createElement('div');
+    entry.className = 'history-entry';
+    entry.innerHTML = `
+      <div class="history-entry-top">
+        <div>
+          <div class="history-date">${rec.split.label} · ${rec.target}</div>
+          <div style="font-size:15px;font-weight:500;">${rec.exerciseName}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="history-duration" style="color:var(--accent);margin-bottom:4px;">${rec.weight} × ${rec.reps}</div>
+          <div class="history-date">${dateStr}</div>
+        </div>
+      </div>
+    `;
+    list.appendChild(entry);
+  });
+}
+
+// ═══════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════
 let toastTimer;
@@ -1208,6 +1471,7 @@ function clearAllData() {
 // ═══════════════════════════════════════════
 window.addEventListener('load', () => {
   loadData();
+  loadWeightData();
   renderHome();
   setTimeout(() => {
     const splash = document.getElementById('splash');
