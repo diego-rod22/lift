@@ -421,7 +421,7 @@
 <!-- Splash -->
 <div id="splash">
   <h1>LIFT</h1>
-  <p>Loading your program</p>
+  <p>May & June Recomp</p>
 </div>
 
 <!-- PR Flash -->
@@ -587,7 +587,7 @@
       </div>
     </div>
   </div>
-  <div class="version-note">LIFT v1.0 · 5-Day PPL Split</div>
+  <div class="version-note">LIFT v2.0 · May & June Recomp</div>
 </div>
 
 <!-- ══════════ ACTIVE SESSION ══════════ -->
@@ -639,7 +639,7 @@
 
 <script>
 // ═══════════════════════════════════════════
-// PROGRAM DATA — 5-Day PPL
+// PROGRAM DATA — 5-Day PPL Recomp (May & June)
 // ═══════════════════════════════════════════
 const SPLIT = [
   {
@@ -647,15 +647,16 @@ const SPLIT = [
     label: 'PULL',
     type: 'pull',
     day: 'Monday',
-    muscles: 'Back · Biceps · Rear Delts',
+    muscles: 'Back · Rear Delts · Biceps',
     exercises: [
-      { id: 'assisted_pullup',    name: 'Assisted Pull-Ups',           target: 'Back',       sets: 3, repRange: '6', defaultWeight: null },
-      { id: 'one_arm_db_row',     name: 'One-Arm DB Row',              target: 'Back',       sets: 3, repRange: '8–10', defaultWeight: 42.5 },
-      { id: 'seated_cable_row',   name: 'Seated Cable Row',            target: 'Mid Back',   sets: 3, repRange: '10–12', defaultWeight: 110 },
-      { id: 'face_pulls',         name: 'Face Pulls',                  target: 'Rear Delts', sets: 3, repRange: '15', defaultWeight: null },
-      { id: 'db_hammer_curls',    name: 'DB Hammer Curls',             target: 'Biceps',     sets: 3, repRange: '10–12', defaultWeight: 20 },
-      { id: 'incline_db_curls',   name: 'Incline DB Curls',            target: 'Biceps',     sets: 2, repRange: '12–15', defaultWeight: 20 },
-      { id: 'cable_pulldown',     name: 'Straight-Arm Cable Pulldown', target: 'Lats',       sets: 2, repRange: '12–15', defaultWeight: null },
+      { id: 'assisted_pullup',         name: 'Assisted Pull-Ups',                   target: 'Back',       sets: 4, repRange: '8–10', defaultWeight: null },
+      { id: 'one_arm_db_row',          name: 'One-Arm DB Row',                      target: 'Back',       sets: 3, repRange: '8–10', defaultWeight: 48.75 },
+      { id: 'seated_cable_row',        name: 'Seated Cable Row',                    target: 'Mid Back',   sets: 3, repRange: '10–12', defaultWeight: 120 },
+      { id: 'chest_supported_db_row',  name: 'Chest-Supported DB Row',              target: 'Back',       sets: 3, repRange: '10–12', defaultWeight: 37.5 },
+      { id: 'face_pulls',              name: 'Face Pulls',                          target: 'Rear Delts', sets: 3, repRange: '15', defaultWeight: null },
+      { id: 'db_hammer_curls',         name: 'DB Hammer Curls',                     target: 'Biceps',     sets: 3, repRange: '10–12', defaultWeight: 23.75 },
+      { id: 'incline_db_curls',        name: 'Incline DB Curls',                    target: 'Biceps',     sets: 2, repRange: '12–15', defaultWeight: 22.5 },
+      { id: 'cable_pulldown',          name: 'Straight-Arm Cable Pulldown',         target: 'Lats',       sets: 2, repRange: '12–15', defaultWeight: null },
     ]
   },
   {
@@ -665,13 +666,14 @@ const SPLIT = [
     day: 'Tuesday',
     muscles: 'Quads · Hamstrings · Glutes · Calves',
     exercises: [
-      { id: 'db_rdl',           name: 'DB Romanian Deadlift',         target: 'Hamstrings', sets: 3, repRange: '8–10', defaultWeight: 42.5 },
-      { id: 'hack_squat',       name: 'Hack Squat or Leg Press',      target: 'Quads',       sets: 3, repRange: '8–10', defaultWeight: 230 },
-      { id: 'leg_extension',    name: 'Leg Extension',                target: 'Quads',       sets: 3, repRange: '12–15', defaultWeight: 95 },
-      { id: 'leg_curl',         name: 'Leg Curl',                     target: 'Hamstrings', sets: 3, repRange: '12–15', defaultWeight: 90 },
-      { id: 'bulgarian_split',  name: 'Bulgarian Split Squats',       target: 'Quads/Glutes', sets: 3, repRange: '10–12', defaultWeight: null },
-      { id: 'calf_raise',       name: 'Standing Calf Raises',         target: 'Calves',     sets: 4, repRange: '15', defaultWeight: 80 },
-      { id: 'belt_squat',       name: 'Belt Squats',                  target: 'Quads',       sets: 2, repRange: '12–15', defaultWeight: 180 },
+      { id: 'db_rdl',                  name: 'DB Romanian Deadlift',                target: 'Hamstrings', sets: 4, repRange: '8–10', defaultWeight: 50 },
+      { id: 'hack_squat',              name: 'Hack Squat or Leg Press',             target: 'Quads',      sets: 4, repRange: '8–10', defaultWeight: 260 },
+      { id: 'leg_extension',           name: 'Leg Extension',                       target: 'Quads',      sets: 3, repRange: '12–15', defaultWeight: 105 },
+      { id: 'leg_curl',                name: 'Seated Leg Curl',                            target: 'Hamstrings', sets: 3, repRange: '12–15', defaultWeight: 100 },
+      { id: 'bulgarian_split',         name: 'Bulgarian Split Squats',              target: 'Quads/Glutes', sets: 3, repRange: '10–12', defaultWeight: null },
+      { id: 'nordic_curl',             name: 'Nordic Curl',      target: 'Hamstrings', sets: 3, repRange: '8–10', defaultWeight: null },
+      { id: 'calf_raise',              name: 'Standing Calf Raises',                target: 'Calves',     sets: 4, repRange: '15', defaultWeight: 90 },
+      { id: 'belt_squat',              name: 'Belt Squats',                         target: 'Quads',      sets: 2, repRange: '12–15', defaultWeight: 195 },
     ]
   },
   {
@@ -681,13 +683,14 @@ const SPLIT = [
     day: 'Wednesday',
     muscles: 'Chest · Shoulders · Triceps',
     exercises: [
-      { id: 'db_bench',         name: 'Dumbbell Bench Press',              target: 'Chest',     sets: 3, repRange: '6–8', defaultWeight: 60 },
-      { id: 'incline_db_press', name: 'Incline Dumbbell Press',            target: 'Upper Chest', sets: 3, repRange: '8–10', defaultWeight: 40 },
-      { id: 'seated_db_ohp',    name: 'Seated Dumbbell Shoulder Press',    target: 'Shoulders', sets: 3, repRange: '8–10', defaultWeight: 30 },
-      { id: 'dips',             name: 'Dips (Assisted or BW)',             target: 'Triceps',   sets: 2, repRange: 'Max Reps', defaultWeight: null },
-      { id: 'db_lateral_raise', name: 'DB Lateral Raises',                 target: 'Side Delts', sets: 3, repRange: '12–15', defaultWeight: 12.5 },
-      { id: 'overhead_tri_ext', name: 'Overhead Single Arm DB Tricep Ext', target: 'Triceps',  sets: 3, repRange: '10–12', defaultWeight: 20 },
-      { id: 'cable_lateral',    name: 'Single-Arm Cable Lateral Raise',    target: 'Side Delts', sets: 2, repRange: '15', defaultWeight: 20 },
+      { id: 'db_bench',                name: 'Dumbbell Bench Press',                target: 'Chest',       sets: 3, repRange: '6–8', defaultWeight: 67.5 },
+      { id: 'incline_db_press',        name: 'Incline Dumbbell Press',              target: 'Upper Chest', sets: 3, repRange: '8–10', defaultWeight: 45 },
+      { id: 'cable_fly_low_to_high',   name: 'Cable Fly Low-to-High',              target: 'Chest',       sets: 3, repRange: '12–15', defaultWeight: 20 },
+      { id: 'seated_db_ohp',           name: 'Seated Dumbbell Shoulder Press',      target: 'Shoulders',   sets: 3, repRange: '8–10', defaultWeight: 35 },
+      { id: 'db_lateral_raise',        name: 'DB Lateral Raises',                   target: 'Side Delts',  sets: 4, repRange: '12–15', defaultWeight: 15 },
+      { id: 'overhead_cable_tri_ext',  name: 'Overhead Cable Tricep Extension',     target: 'Triceps',     sets: 3, repRange: '10–12', defaultWeight: 42.5 },
+      { id: 'cable_lateral_raise',     name: 'Single-Arm Cable Lateral Raise',      target: 'Side Delts',  sets: 2, repRange: '15', defaultWeight: 22.5 },
+      { id: 'dips',                    name: 'Dips (Assisted or BW)',               target: 'Triceps',     sets: 2, repRange: 'Max', defaultWeight: null },
     ]
   },
   {
@@ -695,15 +698,16 @@ const SPLIT = [
     label: 'PULL',
     type: 'pull',
     day: 'Thursday',
-    muscles: 'Back · Biceps · Rear Delts',
+    muscles: 'Back · Rear Delts · Biceps',
     exercises: [
-      { id: 'assisted_pullup_2',    name: 'Assisted Pull-Ups',           target: 'Back',       sets: 3, repRange: '6', defaultWeight: null },
-      { id: 'one_arm_db_row_2',     name: 'One-Arm DB Row',              target: 'Back',       sets: 3, repRange: '8–10', defaultWeight: 42.5 },
-      { id: 'seated_cable_row_2',   name: 'Seated Cable Row',            target: 'Mid Back',   sets: 3, repRange: '10–12', defaultWeight: 110 },
-      { id: 'face_pulls_2',         name: 'Face Pulls',                  target: 'Rear Delts', sets: 3, repRange: '15', defaultWeight: null },
-      { id: 'db_hammer_curls_2',    name: 'DB Hammer Curls',             target: 'Biceps',     sets: 3, repRange: '10–12', defaultWeight: 20 },
-      { id: 'incline_db_curls_2',   name: 'Incline DB Curls',            target: 'Biceps',     sets: 2, repRange: '12–15', defaultWeight: 20 },
-      { id: 'cable_pulldown_2',     name: 'Straight-Arm Cable Pulldown', target: 'Lats',       sets: 2, repRange: '12–15', defaultWeight: null },
+      { id: 'assisted_pullup_2',       name: 'Assisted Pull-Ups',                   target: 'Back',       sets: 4, repRange: '8–10', defaultWeight: null },
+      { id: 'one_arm_db_row_2',        name: 'One-Arm DB Row',                      target: 'Back',       sets: 3, repRange: '8–10', defaultWeight: 48.75 },
+      { id: 'seated_cable_row_2',      name: 'Seated Cable Row',                    target: 'Mid Back',   sets: 3, repRange: '10–12', defaultWeight: 120 },
+      { id: 'chest_supported_db_row_2',name: 'Chest-Supported DB Row',              target: 'Back',       sets: 3, repRange: '10–12', defaultWeight: 37.5 },
+      { id: 'face_pulls_2',            name: 'Face Pulls',                          target: 'Rear Delts', sets: 3, repRange: '15', defaultWeight: null },
+      { id: 'db_hammer_curls_2',       name: 'DB Hammer Curls',                     target: 'Biceps',     sets: 3, repRange: '10–12', defaultWeight: 23.75 },
+      { id: 'incline_db_curls_2',      name: 'Incline DB Curls',                    target: 'Biceps',     sets: 2, repRange: '12–15', defaultWeight: 22.5 },
+      { id: 'cable_pulldown_2',        name: 'Straight-Arm Cable Pulldown',         target: 'Lats',       sets: 2, repRange: '12–15', defaultWeight: null },
     ]
   },
   {
@@ -713,13 +717,14 @@ const SPLIT = [
     day: 'Friday',
     muscles: 'Quads · Hamstrings · Glutes · Calves',
     exercises: [
-      { id: 'db_rdl_2',           name: 'DB Romanian Deadlift',         target: 'Hamstrings', sets: 3, repRange: '8–10', defaultWeight: 42.5 },
-      { id: 'hack_squat_2',       name: 'Hack Squat or Leg Press',      target: 'Quads',       sets: 3, repRange: '8–10', defaultWeight: 230 },
-      { id: 'leg_extension_2',    name: 'Leg Extension',                target: 'Quads',       sets: 3, repRange: '12–15', defaultWeight: 95 },
-      { id: 'leg_curl_2',         name: 'Leg Curl',                     target: 'Hamstrings', sets: 3, repRange: '12–15', defaultWeight: 90 },
-      { id: 'bulgarian_split_2',  name: 'Bulgarian Split Squats',       target: 'Quads/Glutes', sets: 3, repRange: '10–12', defaultWeight: null },
-      { id: 'calf_raise_2',       name: 'Standing Calf Raises',         target: 'Calves',     sets: 4, repRange: '15', defaultWeight: 80 },
-      { id: 'belt_squat_2',       name: 'Belt Squats',                  target: 'Quads',       sets: 2, repRange: '12–15', defaultWeight: 180 },
+      { id: 'db_rdl_2',                name: 'DB Romanian Deadlift',                target: 'Hamstrings', sets: 4, repRange: '8–10', defaultWeight: 50 },
+      { id: 'hack_squat_2',            name: 'Hack Squat or Leg Press',             target: 'Quads',      sets: 4, repRange: '8–10', defaultWeight: 260 },
+      { id: 'leg_extension_2',         name: 'Leg Extension',                       target: 'Quads',      sets: 3, repRange: '12–15', defaultWeight: 105 },
+      { id: 'leg_curl_2',              name: 'Seated Leg Curl',                            target: 'Hamstrings', sets: 3, repRange: '12–15', defaultWeight: 100 },
+      { id: 'bulgarian_split_2',       name: 'Bulgarian Split Squats',              target: 'Quads/Glutes', sets: 3, repRange: '10–12', defaultWeight: null },
+      { id: 'nordic_curl_2',           name: 'Nordic Curl',      target: 'Hamstrings', sets: 3, repRange: '8–10', defaultWeight: null },
+      { id: 'calf_raise_2',            name: 'Standing Calf Raises',                target: 'Calves',     sets: 4, repRange: '15', defaultWeight: 90 },
+      { id: 'belt_squat_2',            name: 'Belt Squats',                         target: 'Quads',      sets: 2, repRange: '12–15', defaultWeight: 195 },
     ]
   },
 ];
@@ -979,9 +984,6 @@ function updateSet(exId, idx, field, val) {
   if (input) input.classList.toggle('has-value', !!val);
 }
 
-// ─────────────────────────────────────────
-// SWIPE DETECTION FOR FAST SET COMPLETION
-// ─────────────────────────────────────────
 function touchStartSetCheck(e, exId, idx) {
   touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY, time: Date.now() };
 }
@@ -992,8 +994,7 @@ function touchEndSetCheck(e, exId, idx) {
   const dy = e.changedTouches[0].clientY - touchStart.y;
   const dist = Math.sqrt(dx*dx + dy*dy);
   const elapsed = Date.now() - touchStart.time;
-  
-  // Detect horizontal swipe (left or right) within 500ms
+
   if (elapsed < 500 && dist > 30 && Math.abs(dx) > Math.abs(dy)) {
     toggleDone(exId, idx);
     touchStart = {};
@@ -1011,7 +1012,6 @@ function toggleDone(exId, idx) {
   if (check) { check.classList.toggle('done', set.done); check.textContent = set.done ? '✓' : ''; }
   if (num) num.classList.toggle('completed', set.done);
 
-  // PR check
   if (set.done && set.weight) {
     const ex = currentSession.exercises.find(e => e.id === exId);
     const allPrev = sessions.flatMap(s =>
@@ -1128,7 +1128,6 @@ function deleteSession(id) {
 // ═══════════════════════════════════════════
 let progressFilter = 'all';
 function renderProgress() {
-  // Gather all exercises that have data
   const exWithData = [];
   SPLIT.forEach(split => {
     split.exercises.forEach(ex => {
@@ -1139,7 +1138,6 @@ function renderProgress() {
     });
   });
 
-  // Filters
   const types = ['all', ...new Set(exWithData.map(e => e.split.type))];
   const filterEl = document.getElementById('progress-filter');
   filterEl.innerHTML = '';
@@ -1158,8 +1156,7 @@ function renderProgress() {
   }
 
   charts.innerHTML = '';
-  
-  // WEEKLY VOLUME CHART
+
   const weekStart = new Date();
   weekStart.setDate(weekStart.getDate() - weekStart.getDay());
   const weekVolume = sessions
@@ -1168,7 +1165,7 @@ function renderProgress() {
     .flatMap(e => e.sets || [])
     .filter(s => s.done && s.weight && s.reps)
     .reduce((sum, s) => sum + (parseFloat(s.weight) || 0) * (parseFloat(s.reps) || 0), 0);
-  
+
   const volumeCard = document.createElement('div');
   volumeCard.className = 'progress-chart-card';
   volumeCard.innerHTML = `
@@ -1180,11 +1177,10 @@ function renderProgress() {
     </div>
   `;
   charts.appendChild(volumeCard);
-  
+
   const filtered = progressFilter === 'all' ? exWithData : exWithData.filter(e => e.split.type === progressFilter);
 
   filtered.forEach(({ ex, split, allSets }) => {
-    // Build per-session max weight over time
     const sessionMaxes = [];
     sessions.forEach(s => {
       const done = s.exercises?.find(e => e.id === ex.id)?.sets?.filter(ss=>ss.done && ss.weight) || [];
@@ -1226,7 +1222,6 @@ function renderProgress() {
     `;
     charts.appendChild(card);
 
-    // Draw sparkline
     requestAnimationFrame(() => drawSparkline(`spark-${ex.id}`, sessionMaxes.map(s=>s.max), split.type));
   });
 }
@@ -1251,7 +1246,6 @@ function drawSparkline(canvasId, data, type) {
     y: H - ((v - min) / range) * (H - 20) - 10
   }));
 
-  // Gradient fill
   const grad = ctx.createLinearGradient(0, 0, 0, H);
   grad.addColorStop(0, color + '40');
   grad.addColorStop(1, color + '00');
@@ -1264,7 +1258,6 @@ function drawSparkline(canvasId, data, type) {
   ctx.fillStyle = grad;
   ctx.fill();
 
-  // Line
   ctx.beginPath();
   ctx.moveTo(pts[0].x, pts[0].y);
   pts.forEach(p => ctx.lineTo(p.x, p.y));
@@ -1273,7 +1266,6 @@ function drawSparkline(canvasId, data, type) {
   ctx.lineJoin = 'round';
   ctx.stroke();
 
-  // Dots
   pts.forEach(p => {
     ctx.beginPath();
     ctx.arc(p.x, p.y, 5, 0, Math.PI*2);
@@ -1302,7 +1294,7 @@ function addWeightEntry() {
   const input = document.getElementById('weight-input');
   const weight = parseFloat(input.value);
   if (!weight || weight <= 0) { showToast('Enter a valid weight'); return; }
-  
+
   weightEntries.push({
     date: new Date().toISOString(),
     weight: weight
@@ -1325,13 +1317,13 @@ function renderWeight() {
   const current = weightEntries.length ? weightEntries[weightEntries.length - 1].weight : 0;
   const change = weightEntries.length > 1 ? current - weightEntries[0].weight : 0;
   document.getElementById('weight-current').textContent = current ? `${current} lbs · ${change > 0 ? '+' : ''}${change.toFixed(1)} lbs` : 'Log your body weight';
-  
+
   const historyEl = document.getElementById('weight-history');
   if (!weightEntries.length) {
     historyEl.innerHTML = '<div class="empty-state"><span class="big">NONE</span>No weight entries yet.</div>';
     return;
   }
-  
+
   historyEl.innerHTML = '';
   [...weightEntries].reverse().forEach((entry, idx) => {
     const date = new Date(entry.date);
@@ -1357,8 +1349,7 @@ function renderWeight() {
 function renderRecords() {
   const list = document.getElementById('records-list');
   const records = [];
-  
-  // Collect all exercise records
+
   SPLIT.forEach(split => {
     split.exercises.forEach(ex => {
       const allSets = sessions.flatMap(s =>
@@ -1384,15 +1375,15 @@ function renderRecords() {
       }
     });
   });
-  
+
   records.sort((a, b) => b.weight - a.weight);
   document.getElementById('records-count').textContent = `${records.length} personal record${records.length !== 1 ? 's' : ''}`;
-  
+
   if (!records.length) {
     list.innerHTML = '<div class="empty-state"><span class="big">NONE</span>Log workouts to see personal records.</div>';
     return;
   }
-  
+
   list.innerHTML = '';
   records.forEach(rec => {
     const dateStr = rec.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
