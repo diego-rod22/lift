@@ -237,15 +237,30 @@
   }
   .sets-area { padding: 0 16px 16px; }
   .sets-header {
-    display: grid; grid-template-columns: 40px 1fr 1fr 40px;
+    display: grid; grid-template-columns: 32px 1fr 1fr 36px 24px;
     gap: 8px; padding: 0 0 8px;
     font-family: 'DM Mono', monospace; font-size: 10px;
     color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
   }
   .set-row {
-    display: grid; grid-template-columns: 40px 1fr 1fr 40px;
+    display: grid; grid-template-columns: 32px 1fr 1fr 36px 24px;
     gap: 8px; margin-bottom: 8px; align-items: center;
   }
+  .set-delete {
+    width: 24px; height: 36px; border-radius: 6px;
+    background: none; border: none;
+    color: var(--text-muted); font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: color 0.2s;
+  }
+  .set-delete:hover, .set-delete:active { color: var(--danger); }
+  .exercise-skip-btn {
+    background: none; border: none; color: var(--text-muted);
+    font-family: 'DM Mono', monospace; font-size: 11px; cursor: pointer;
+    padding: 4px 8px; border-radius: 6px; letter-spacing: 0.5px;
+    flex-shrink: 0; transition: color 0.2s;
+  }
+  .exercise-skip-btn:hover, .exercise-skip-btn:active { color: var(--danger); }
   .set-num {
     font-family: 'DM Mono', monospace; font-size: 13px;
     color: var(--text-muted); text-align: center;
@@ -898,17 +913,19 @@ function renderSessionExercises() {
 
     card.innerHTML = `
       <div class="exercise-header">
-        <div>
+        <div style="flex:1;min-width:0;">
           <div class="exercise-name">${ex.name}</div>
           <div class="exercise-target">${ex.target} · ${ex.repRange} reps</div>
         </div>
         ${lastBadge ? `<div class="last-session-badge">${lastBadge}</div>` : ''}
+        <button class="exercise-skip-btn" onclick="removeExercise('${ex.id}')">✕ Skip</button>
       </div>
       <div class="sets-area">
         <div class="sets-header">
           <div style="text-align:center">Set</div>
           <div style="text-align:center">lbs</div>
           <div style="text-align:center">Reps</div>
+          <div></div>
           <div></div>
         </div>
         <div id="sets-${ex.id}"></div>
@@ -964,6 +981,7 @@ function renderSetsForEx(ex) {
         id="reps-${ex.id}-${i}" placeholder="${lastSet?.reps||ex.repRange}"
         value="${set.reps}" oninput="updateSet('${ex.id}',${i},'reps',this.value)">
       ${checkMarkup}
+      <button class="set-delete" onclick="deleteSet('${ex.id}',${i})" title="Remove set">×</button>
     `;
     container.appendChild(row);
   });
@@ -1026,6 +1044,20 @@ function addSet(exId) {
   setData[exId].push({ weight: '', reps: '', done: false });
   const ex = currentSession.exercises.find(e => e.id === exId);
   renderSetsForEx(ex);
+}
+
+function deleteSet(exId, idx) {
+  if (setData[exId].length <= 1) { showToast('Need at least 1 set'); return; }
+  setData[exId].splice(idx, 1);
+  const ex = currentSession.exercises.find(e => e.id === exId);
+  renderSetsForEx(ex);
+}
+
+function removeExercise(exId) {
+  if (!confirm('Skip this exercise for today?')) return;
+  currentSession = { ...currentSession, exercises: currentSession.exercises.filter(e => e.id !== exId) };
+  delete setData[exId];
+  document.getElementById('excard-' + exId)?.remove();
 }
 
 function confirmClose() {
