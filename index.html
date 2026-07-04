@@ -304,6 +304,33 @@
     transition: color 0.2s; width: 28px; text-align: center;
   }
   .set-delete:hover, .set-delete:active { color: var(--danger); }
+  .plate-hint {
+    grid-column: 1 / -1;
+    font-size: 10px; color: var(--text-muted);
+    font-family: 'DM Mono', monospace; letter-spacing: 0.5px;
+    text-align: center; padding: 0 0 4px; display: none;
+  }
+  .plate-hint.visible { display: block; }
+  .session-note-wrap {
+    margin: 16px 16px 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+  }
+  .session-note-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--text-muted); letter-spacing: 1px;
+    text-transform: uppercase; padding: 12px 16px 0;
+  }
+  .session-note-wrap textarea {
+    width: 100%; background: transparent; border: none;
+    padding: 10px 16px 16px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    resize: none; outline: none; line-height: 1.5;
+  }
+  .history-note {
+    font-size: 12px; color: var(--text-mid); font-style: italic;
+    padding: 8px 0 0; border-top: 1px solid var(--border); margin-top: 8px;
+  }
 
   /* ── CONFIRM MODAL ── */
   .confirm-overlay {
@@ -657,6 +684,10 @@
     <button class="finish-btn" onclick="finishSession()">FINISH WORKOUT</button>
   </div>
   <div id="session-exercises"></div>
+  <div class="session-note-wrap">
+    <div class="session-note-label">SESSION NOTES</div>
+    <textarea id="session-note-input" placeholder="How'd it go? Anything to remember for next time..." rows="3"></textarea>
+  </div>
 </div>
 
 <!-- ══════════ NAV ══════════ -->
@@ -938,6 +969,7 @@ function startSessionForSplit(splitId) {
   document.getElementById('session-date-label').textContent =
     new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
 
+  document.getElementById('session-note-input').value = '';
   renderSessionExercises();
   document.getElementById('session-page').classList.add('open');
 
@@ -1021,7 +1053,9 @@ function renderSetsForEx(ex) {
     `;
 
     row.innerHTML = `
-      <div class="set-num ${set.done ? 'completed' : ''}" id="setnum-${ex.id}-${i}">${i+1}</div>
+      <div class="set-num ${set.done ? 'completed' : ''}" id="setnum-${ex.id}-${i}"
+        ontouchstart="swipeStartSet(event,'${ex.id}',${i})"
+        ontouchend="swipeEndSet(event,'${ex.id}',${i})">${i+1}</div>
       <div class="weight-controls">
         <button class="weight-btn" onclick="adjWeight('${ex.id}',${i},-2.5)">−</button>
         <input type="number" inputmode="decimal" class="set-input ${set.weight?'has-value':''}"
@@ -1034,8 +1068,14 @@ function renderSetsForEx(ex) {
         value="${set.reps}" oninput="updateSet('${ex.id}',${i},'reps',this.value)">
       ${checkMarkup}
       <button class="set-delete" onclick="deleteSet('${ex.id}',${i})" title="Remove set">×</button>
+      <div class="plate-hint" id="plate-hint-${ex.id}-${i}"></div>
     `;
     container.appendChild(row);
+    if (set.weight) {
+      const plates = calcPlates(set.weight);
+      const hint = document.getElementById(`plate-hint-${ex.id}-${i}`);
+      if (hint && plates) { hint.textContent = plates; hint.classList.add('visible'); }
+    }
   });
 }
 
@@ -1052,6 +1092,14 @@ function updateSet(exId, idx, field, val) {
   setData[exId][idx][field] = val;
   const input = document.getElementById(`${field==='weight'?'weight':'reps'}-${exId}-${idx}`);
   if (input) input.classList.toggle('has-value', !!val);
+  if (field === 'weight') {
+    const hint = document.getElementById(`plate-hint-${exId}-${idx}`);
+    if (hint) {
+      const plates = calcPlates(val);
+      hint.textContent = plates || '';
+      hint.classList.toggle('visible', !!plates);
+    }
+  }
 }
 
 function touchStartSetCheck(e, exId, idx) {
@@ -1076,6 +1124,7 @@ function toggleDone(exId, idx) {
   const set = setData[exId][idx];
   if (!set.weight && !set.reps) { showToast('Enter weight & reps first'); return; }
   set.done = !set.done;
+  if (set.done && navigator.vibrate) navigator.vibrate(30);
 
   const check = document.getElementById(`check-${exId}-${idx}`);
   const num = document.getElementById(`setnum-${exId}-${idx}`);
@@ -1105,6 +1154,32 @@ function deleteSet(exId, idx) {
   renderSetsForEx(ex);
 }
 
+function calcPlates(weight) {
+  const bar = 45;
+  let per = (parseFloat(weight) - bar) / 2;
+  if (isNaN(per) || per < 0) return null;
+  if (per < 0.01) return 'bar only';
+  const sizes = [45, 35, 25, 10, 5, 2.5];
+  const result = [];
+  for (const p of sizes) {
+    const n = Math.floor(per / p + 0.001);
+    if (n > 0) { result.push(n > 1 ? `${n}×${p}` : `${p}`); per -= n * p; }
+  }
+  return per > 0.1 ? null : result.join(' + ') + ' each side';
+}
+
+let setSwipeStart = {};
+function swipeStartSet(e, exId, idx) {
+  setSwipeStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+}
+function swipeEndSet(e, exId, idx) {
+  if (!setSwipeStart.x) return;
+  const dx = e.changedTouches[0].clientX - setSwipeStart.x;
+  const dy = e.changedTouches[0].clientY - setSwipeStart.y;
+  setSwipeStart = {};
+  if (dx < -60 && Math.abs(dx) > Math.abs(dy) * 1.5) deleteSet(exId, idx);
+}
+
 function removeExercise(exId) {
   showConfirm('Skip this exercise for today?', 'SKIP EXERCISE', () => {
     currentSession = { ...currentSession, exercises: currentSession.exercises.filter(e => e.id !== exId) };
@@ -1132,12 +1207,14 @@ function finishSession() {
   if (!doneSets.length) { showToast('Log at least one set first'); return; }
 
   const elapsed = Math.floor((Date.now() - sessionStart) / 1000);
+  const note = document.getElementById('session-note-input').value.trim();
   const session = {
     id: Date.now(),
     splitId: currentSession.id,
     timestamp: new Date().toISOString(),
     date: new Date().toDateString(),
     duration: elapsed,
+    note: note || undefined,
     exercises: currentSession.exercises.map(ex => ({
       id: ex.id,
       name: ex.name,
@@ -1195,6 +1272,7 @@ function renderHistory() {
         <div class="history-duration">${durStr}</div>
       </div>
       ${exerciseRows}
+      ${session.note ? `<div class="history-note">"${session.note}"</div>` : ''}
       <button class="history-delete" onclick="deleteSession(${session.id})">Delete</button>
     `;
     list.appendChild(entry);
